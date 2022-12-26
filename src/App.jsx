@@ -12,8 +12,12 @@ import EditUser from "./features/users/EditUser";
 import NewUserForm from "./features/users/NewUserForm";
 import Prefetch from "./features/auth/PreFetch";
 import PersistLogin from "./features/auth/PersistLogin";
+import RequireAuth from "./features/auth/RequireAuth";
+import { ROLES } from "./config/roles";
+import useTitle from "./hooks/useTitle";
 
 function App() {
+    useTitle('Soheil Tech')
     return (
         <Routes>
             <Route path="/" element={<Layout />} />
@@ -21,20 +25,37 @@ function App() {
             <Route path="login" element={<Login />} />
 
             <Route element={<PersistLogin />}>
-                <Route element={<Prefetch />}>
-                    <Route path="dash" element={<AdminDash />}>
-                        <Route index element={<Welcome />} />
+                <Route
+                    element={
+                        <RequireAuth allowedRoles={[...Object.values(ROLES)]} />
+                    }
+                >
+                    <Route element={<Prefetch />}>
+                        <Route path="dash" element={<AdminDash />}>
+                            <Route index element={<Welcome />} />
 
-                        <Route path="users">
-                            <Route index element={<UsersList />} />
-                            <Route path=":id" element={<EditUser />} />
-                            <Route path="new" element={<NewUserForm />} />
-                        </Route>
+                            <Route
+                                element={
+                                    <RequireAuth
+                                        allowedRoles={[ROLES.Admin, ROLES.Manager]}
+                                    />
+                                }
+                            >
+                                <Route path="users">
+                                    <Route index element={<UsersList />} />
+                                    <Route path=":id" element={<EditUser />} />
+                                    <Route
+                                        path="new"
+                                        element={<NewUserForm />}
+                                    />
+                                </Route>
+                            </Route>
 
-                        <Route path="notes">
-                            <Route index element={<NotesList />} />
-                            <Route path=":id" element={<EditNote />} />
-                            <Route path="new" element={<NewNote />} />
+                            <Route path="notes">
+                                <Route index element={<NotesList />} />
+                                <Route path=":id" element={<EditNote />} />
+                                <Route path="new" element={<NewNote />} />
+                            </Route>
                         </Route>
                     </Route>
                 </Route>
