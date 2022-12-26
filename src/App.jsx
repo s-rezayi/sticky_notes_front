@@ -6,28 +6,38 @@ import AdminDash from "./components/AdminDash";
 import Welcome from "./features/auth/Welcome";
 import NotesList from "./features/notes/NotesList";
 import UsersList from "./features/users/UsersList";
+import EditNote from "./features/notes/EditNote";
+import NewNote from "./features/notes/NewNote";
+import EditUser from "./features/users/EditUser";
+import NewUserForm from "./features/users/NewUserForm";
+import Prefetch from "./features/auth/PreFetch";
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Layout />} />
-      <Route index element={<Public />} />
-      <Route path="login" element={<Login />} />
+    return (
+        <Routes>
+            <Route path="/" element={<Layout />} />
+            <Route index element={<Public />} />
+            <Route path="login" element={<Login />} />
 
-      <Route path="dash" element={<AdminDash />}>
-        <Route index element={<Welcome />} />
+            <Route element={<Prefetch />}>
+                <Route path="dash" element={<AdminDash />}>
+                    <Route index element={<Welcome />} />
 
-        <Route path="notes">
-          <Route index element={<NotesList />} />
-        </Route>
+                    <Route path="users">
+                        <Route index element={<UsersList />} />
+                        <Route path=":id" element={<EditUser />} />
+                        <Route path="new" element={<NewUserForm />} />
+                    </Route>
 
-        <Route path="users">
-          <Route index element={<UsersList />} />
-        </Route>
-        
-      </Route>
-    </Routes>
-  );
+                    <Route path="notes">
+                        <Route index element={<NotesList />} />
+                        <Route path=":id" element={<EditNote />} />
+                        <Route path="new" element={<NewNote />} />
+                    </Route>
+                </Route>
+            </Route>
+        </Routes>
+    );
 }
 
 export default App;
